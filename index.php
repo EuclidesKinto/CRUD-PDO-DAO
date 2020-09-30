@@ -1,19 +1,23 @@
-<?php 
-require 'config.php'; 
- require 'header.php'; 
- $list = [];
- $sql = $pdo->query("SELECT * FROM users");
+<?php
+require 'config.php';
+require 'header.php';
+require 'dao/UsuarioDaoMysql.php';
+$usuarioDao = new UsuarioDaoMysql($pdo);
 
- if($sql->rowCount() > 0){
-     $list = $sql->fetchAll(PDO::FETCH_ASSOC);
- }
- 
- ?>
+$list = $usuarioDao->findAll();
+/*$list = [];
+$sql = $pdo->query("SELECT * FROM users");
+
+if ($sql->rowCount() > 0) {
+  $list = $sql->fetchAll(PDO::FETCH_ASSOC);
+}*/
+
+?>
 
 <div class="container mt-3">
   <h1>Home</h1>
   <div class="m-3">
-      <a href="adicionar.php" class="btn btn-primary">Adicionar</a>
+    <a href="adicionar.php" class="btn btn-primary">Adicionar</a>
   </div>
 
   <table class="table table-hover">
@@ -26,18 +30,17 @@ require 'config.php';
       </tr>
     </thead>
     <tbody>
-        <?php  foreach ($list as $user): ?> 
-            <tr>
-                <th scope="row"><?= $user['id']; ?></th>
-                <td><?= $user['name']; ?></td>
-                <td><?= $user['email']; ?></td>
-                <td class="text-center">
-                <a href="editar.php?id=<?= $user['id']; ?>" class="btn btn-info btn-sm">EDITAR</a>
-                <a href="excluir.php?id=<?= $user['id']; ?>" class="btn btn-danger btn-sm" 
-                onclick="return confirm('Tem cereza que quer excluir <?= $user['name']; ?>')">EXCLUIR</a>
-                </td>
-            </tr>
-        <?php endforeach ?>
+      <?php foreach ($list as $user): ?>
+        <tr>
+          <th scope="row"><?= $user->getId(); ?></th>
+          <td><?= $user->getName(); ?></td>
+          <td><?= $user->getEmail(); ?></td>
+          <td class="text-center">
+            <a href="editar.php?id=<?= $user->getId(); ?>" class="btn btn-info btn-sm">EDITAR</a>
+            <a href="excluir.php?id=<?= $user->getId(); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem cereza que quer excluir <?= $user['name']; ?>')">EXCLUIR</a>
+          </td>
+        </tr>
+      <?php endforeach ?>
     </tbody>
   </table>
 </div>
